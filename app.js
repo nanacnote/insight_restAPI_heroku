@@ -18,7 +18,7 @@ app.use(cors())
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://admin:xyghyT-bygdow-xyqvo8@ds249372.mlab.com:49372/heroku_19pb258p';
+var mongoDB = 'mongodb://admin:xyghyT-bygdow-xyqvo8@ds055802.mlab.com:55802/heroku_htz4tvh3';
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
