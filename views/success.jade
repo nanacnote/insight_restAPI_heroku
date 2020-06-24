@@ -1,0 +1,54 @@
+extends layout
+
+block content
+    .h3 #{header}
+    .container-fluid.p-5.m-0.bg-secondary
+        .container-fluid.p-5.bg-light
+            .d-flex.justify-content-end.p-5
+                button.m-1.btn.btn-outline-info.btn-lg.back-button-handler Back
+                button.m-1.btn.btn-outline-info.btn-lg.home-button-handler Home
+            .row
+                //- financial report submission successful page
+                if origin === "financial_report"
+                    .container-fluid
+                        .row.m-5
+                            .col.rounded-right.p-5.bg-warning(style="border-left: solid 5px red; border-bottom: solid 5px red")
+                                .h6 Income Statement
+                                pre= response.income_statement
+                        .row.m-5
+                            .col.rounded-right.p-5.bg-warning(style="border-left: solid 5px red; border-bottom: solid 5px red")
+                                .h6 Balance Sheet
+                                pre= response.balance_sheet
+                        .row.m-5
+                            .col.rounded-right.p-5.bg-warning(style="border-left: solid 5px red; border-bottom: solid 5px red")
+                                .h6 Cash Flow
+                                pre= response.cash_flow
+
+                //- company overview submission successful page
+                if origin === "company_overview"
+                    each val, index in response
+                        .container-fluid
+                            each v, i in JSON.parse(JSON.stringify(val))
+                                .row.m-5
+                                    .col.rounded-right.p-5.bg-warning(style="border-left: solid 5px red; border-bottom: solid 5px red")
+                                        .h6= i
+                                        pre= v
+
+                //- list of all grabbed link for scraping for stock quotes
+                if origin === "london_stock_exchange_constituent_links"
+                    .container-fluid
+                        //- this block sorts the ticker_name into A-Z
+                        -var path_url= []
+                        -var ticker_name= []
+                        each val, index in response
+                            -path_url.push(`${val.match(/[A-Z].*/g)}`)
+                            -ticker_name.push(`${val.match(/[A-Z].*/g)}`.replace(/-/g, " "))
+                        -var sorted_path_url= path_url.sort()
+                        -var sorted_ticker_name= ticker_name.sort()
+
+                        each val, index in sorted_ticker_name
+                            .row.m-5
+                                .col.rounded-right.p-5.bg-warning(style="border-left: solid 5px red; border-bottom: solid 5px red")
+                                    pre(style="font-size: 1.5rem")= val
+                                    div(class=`quote-section-${index}`)
+                                    button.btn.btn-outline-dark.get-quote-handler(path= sorted_path_url[index] key= index) Get Quote

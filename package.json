@@ -1,0 +1,33 @@
+{
+  "name": "insight-server",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "14.2.0",
+    "npm": "6.14.4"
+	},
+  "scripts": {
+    "start": "node ./bin/www",
+    "n": "nodemon ./bin/www",
+    "b": "browser-sync start --proxy=localhost:3000 --files='**/*.css, **/*.jade, **/*.js' --ignore=node_modules --reload-delay 10 --no-ui --no-notify",
+    "w": "npx watchify ./public/jquery/main.js -o ./public/jquery/bundle.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "financejs": "^4.1.0",
+    "got": "^11.3.0",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "mongoose": "^5.9.15",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "nodemon": "^2.0.4",
+    "watchify": "^3.11.1"
+  }
+}

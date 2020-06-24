@@ -1,0 +1,11 @@
+start express app with debug logging:
+DEBUG=insight-server:* npm start
+
+start mongodb service:
+brew services start mongodb-community@4.2
+
+stop mongodb service
+brew services stop mongodb-community@4.2
+
+connect and Use MongoDB
+mongo *run in separate teminal *

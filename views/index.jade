@@ -1,0 +1,399 @@
+extends layout
+
+block content
+  .h1 #{title}
+  p Welcome to #{title} portal
+  .container-fluid.p-5.m-0.bg-secondary
+    .row
+
+      .container-fluid.p-5.mb-5.bg-light
+        .h5 Analytics Management
+
+      .container-fluid.p-5.mb-5.bg-light
+        .h5 CMS Management
+        .container-fluid
+          button.m-2.btn.btn-outline-info.btn-lg.cms-home Home
+          button.m-2.btn.btn-outline-info.btn-lg.cms-data Data
+          button.m-2.btn.btn-outline-info.btn-lg.cms-dashboard Dashboard
+          button.m-2.btn.btn-outline-info.btn-lg.cms-publications Publications
+          button.m-2.btn.btn-outline-info.btn-lg.cms-about About
+        hr.mb-5
+        .container-fluid(hidden=true)
+          pre(wrap) use the form below to submit content to be published on the client
+          form
+            .row
+              .col-md
+                .form-group
+                  label.m-2 section of site to be updated
+                  select.form-control.m-2
+                    option Home
+                    option Data
+                    option Publication
+                    option About Us
+                  label.m-2 specific element to be updated
+                  select.form-control.m-2
+                    option logo
+                    option banner
+                    option overview card capition
+                    option home background image
+                  label.m-2 schedule time
+                  input.form-control.m-2
+              .col-md
+                .form-group
+                  label.m-2 input text here markdown supported
+                  textarea.form-control.m-2(rows="5")
+                  label.m-2 input file paths to elements
+                  input.form-control.m-2
+            button.btn.btn-dark.m-2 submit to site
+
+      .container-fluid.p-5.bg-light
+        .h5 Database Management
+        .container-fluid
+          button.m-2.btn.btn-outline-info.btn-lg.db-portal-handler DB portal
+          button.m-2.btn.btn-outline-info.btn-lg.stock-scraper-handler Stock scraper
+          button.m-2.btn.btn-outline-info.btn-lg.pdf-scraper-handler PDF scraper
+          button.m-2.btn.btn-outline-info.btn-lg.financial-report-handler Financial reports
+          button.m-2.btn.btn-outline-info.btn-lg.company-overview-handler Company overview
+        hr.mb-5
+
+        //- DB portal section
+        //- display activator on data injection
+        - var db= injection ? injection.display : true
+        .container-fluid.db-portal(hidden= db)
+          pre(wrap) manipulate database entries from here
+          div
+            .row.mb-5
+              button.btn.btn-dark.m-2.db-show-all-handler(type="") show all
+              button.btn.btn-dark.m-2.db-show-financial-report-handler(type="button" disabled) show financial reports
+              button.btn.btn-dark.m-2.db-show-stock-prices-handler(type="button" disabled) show stock prices
+            
+            .row
+              if injection
+                .card.w-100.shadow-sm.overflow-auto.p-2#db-injection-section
+                  .card-body
+                    .h5.card-title.db-title Showing #{type} 
+                    .h6.card-subtitle.mb-5.text-muted.db-subtitle
+                      span.db-length=length || 0
+                      span  entries in total
+                    .card-text
+                      div.pr-5.pl-5.bg-light.border.rounded.overflow-auto(style="max-height: 600px;")
+                        div.sticky-top.bg-light.pt-5.overflow-auto
+                          .h4.mb-2 Company Overview
+                          table.table
+                            thead.thead-dark
+                              tr
+                                th(scope="col") #
+                                th(scope="col") ID
+                                th(scope="col") Ticker
+                                th(scope="col") Company Name
+                                th(scope="col") 
+                        div.overflow-auto
+                          table.table.table-striped.bg-light.db-table
+                            tbody
+                              each val, index in CompanyOverview
+                                tr.db-entry
+                                  th(scope="row")= index+1
+                                  td= val[0]
+                                  td= val[1].toUpperCase()
+                                  td= val[2]
+                                  td
+                                    .btn-group.db-details-delete-handler
+                                      //- these button control the delete and details injection content by taking prop attributes when they are
+                                      //- rendered. These attributes are then used by jquery to target delete action and display more info
+                                      button.btn.btn-primary.btn-sm.db-details-handler(
+                                        category="company_overview"
+                                        name=val[1]
+                                        data=val[3]
+                                        type="button"
+                                        ) Details
+                                      button.btn.btn-danger.btn-sm.db-delete-handler(
+                                        id=val[0]
+                                        category="company_overview"
+                                        name=val[1]
+                                        type="button"
+                                        ) Delete
+                        
+                      div.p-5
+
+                      div.pr-5.pl-5.bg-light.border.rounded.overflow-auto(style="max-height: 600px;")
+                        div.sticky-top.bg-light.pt-5.overflow-auto
+                          .h4.mb-2 Financial Report
+                          table.table
+                            thead.thead-dark
+                              tr
+                                th(scope="col") #
+                                th(scope="col") ID
+                                th(scope="col") Ticker
+                                th(scope="col") Company Name
+                                th(scope="col") Year
+                                th(scope="col") 
+                        div.overflow-auto
+                          table.table.table-striped.bg-light.db-table
+                            tbody
+                              each val, index in FinancialReport
+                                tr.db-entry
+                                  th(scope="row")= index+1
+                                  td= val[0].slice(1,-1)
+                                  td= val[1].slice(1,-1).toUpperCase()
+                                  td= val[2].slice(1,-1)
+                                  td= val[3].slice(1,-1)
+                                  td
+                                    .btn-group.db-details-delete-handler
+                                      //- these button control the delete and details injection content by taking prop attributes when they are
+                                      //- rendered. These attributes are then used by jquery to target delete action and display more info
+                                      button.btn.btn-primary.btn-sm.db-details-handler(
+                                        category="financial_report"
+                                        name=val[1].slice(1,-1)
+                                        is=`${val[4]["income_statement"]}`
+                                        bs=`${val[4]["balance_sheet"]}`
+                                        cf=`${val[4]["cash_flow"]}`
+                                        type="button"
+                                        ) Details
+                                      button.btn.btn-danger.btn-sm.db-delete-handler(
+                                        id=val[0].slice(1,-1)
+                                        category="financial_report"
+                                        name=val[1].slice(1,-1)
+                                        type="button"
+                                        ) Delete
+
+        //- stock scraper section 
+        .container-fluid.stock-scraper(hidden=true)
+          pre(wrap) use the form below to submit links for scraper App
+          .card.w-100.shadow-sm.overflow-auto.p-2
+            .card-body
+              pre.card-text
+                form#stock-scraper-form
+                  .row
+                    .col-md
+                      .form-group
+                        label.m-2 choose a data source
+                        select.form-control.m-2.data-source-handler(name="selector")
+                          option(value="-") --
+                          option(value="lse_ftse_100_links") LSE contituent links
+                        label.m-2 enter the location of the resource
+                        input.form-control.m-2.scraper-input.scraper-input-default(type="text" name="resource_location" placeholder="location of resource")
+                        input.form-control.m-2.scraper-input(type="text" name="resource_location" placeholder="location of resource")
+                        input.form-control.m-2.scraper-input(type="text" name="resource_location" placeholder="location of resource")
+                    .col-md
+                      .form-group
+                        label.m-2 frequency of scrapping
+                        select.form-control.m-2.schedule-input-handler
+                          option(value="-") --
+                          option(value="future") future
+                          option(value="repeat") repeat
+                        label.m-2 schedule future 
+                        input.form-control.m-2.schedule-input-future(type="date" name="future" disabled=true)
+                        label.m-2 schedule repeat
+                        input.form-control.m-2.schedule-input-repeat(type="date" name="repeat" disabled=true)
+                  button.btn.btn-dark.m-2(type="submit") submit to scraper
+                button.btn.btn-info.m-2.scraper-input-handler click to add more url input fields
+        
+        //- pdf scraper section
+        .container-fluid.pdf-scraper(hidden=true)
+          pre(wrap) use the input and canvas to scrap PDF data
+          .card.w-100.shadow-sm.overflow-auto.p-2
+            .card-body
+              pre.card-text
+                .container-fluid
+                  form.pdf-scraper-form(action="")
+                    label.p-2 path to .PDF file
+                    .input-group
+                      input.form-control.m-2.pdf-scraper-input(type="text" name="path" placeholder="http://website.com/data/file.pdf")
+                      .input-group-append
+                        button.btn.btn-info.m-2.pdf-scraper-form-handler 
+                          span.spinner-border.spinner-border-sm.mr-2.pdf-scraper-spinner(hidden=true)
+                          span load
+
+                //- results section
+                .container-fluid.mt-5.pdf-scraper-results(hidden=true)
+                  .row
+                    //- left text
+                    .col-md
+                      div.h5.pdf-text
+                    //- right pdf viewer
+                    .col-md
+                      .container
+                        div
+                          .row
+                            .shadow-lg.rounded
+                              canvas#the-canvas.w-100.h-auto
+                          .row
+                            .col page
+                              input.m-1.form-control.pdf-input(type="number" name="pdf-page" placeholder="1")
+                            .col zoom
+                              input.m-1.form-control.pdf-zoom(type="number" step="0.5" name="pdf-zoom" placeholder="2.0")
+                  
+                  //- text grabber section *fixed
+                  .row.ml-5.mr-5.fixed-bottom
+                    .container-fluid
+                      .row
+                        button.btn.btn-dark.mb-2.text-grabber-handler show/hide regex
+                    .container-fluid.bg-dark.rounded.text-grabber-section
+                      form#pdf-scraper-form(method="post" action="/data/post?function=pdf_scraper&token=admin")
+                        .container-fluid
+                          .row
+                            //- display for selected text
+                            input.pdf-input-selection(hidden type="text" name="selection")
+                            .w-100.p-3.bg-white.rounded.mt-4.mb-2.ml-2.mr-2.pdf-display-selection.overflow-auto
+                        .container-fluid
+                          .row
+                            .col
+                              .h6.text-white Use Regex Collection
+                              .container-fluid
+                                .row
+                                  button.btn.btn-info.m-2.regex-controls.regex-reset-handler(type="button") reset 
+                                  button.btn.btn-info.m-2.regex-controls.regex-extract-handler(type="button") view
+                                  button.btn.btn-light.m-2.regex-controls.regex-compile-handler(type="submit") compile
+                                  button.btn.btn-warning.m-2.regex-controls.regex-setter-handler(type="button")
+                                    span.spinner-grow.spinner-grow-sm.mr-2.regex-setter-spinner(hidden=true)
+                                    span start listening
+                            .col
+                              .h6.text-white Use Target Value
+                              .container-fluid
+                                .row
+                                  button.btn.btn-info.m-2.target-controls.target-clear-previous-handler(type="button") clear previous
+                                  button.btn.btn-info.m-2.target-controls.target-view-handler(type="button") view
+                                  button.btn.btn-light.m-2.target-controls.target-compile-handler(type="submit") compile
+                                  button.btn.btn-warning.m-2.target-controls.target-setter-handler(type="button")
+                                    span.spinner-grow.spinner-grow-sm.mr-2.target-setter-spinner(hidden=true)
+                                    span start listening
+        
+        //- financial reports section
+        .container-fluid.financial-report(hidden=true)
+          pre(wrap) use the form to input 3 statement financial report
+          form(method="post" action="/data/post?function=financial_report&token=admin")
+            .row
+              .col-lg.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    pre.card-text
+                      label company_name
+                      input.form-control.mb-2.input-transform-lowercase(required type="text" name="company_name")
+                      label ticker
+                      input.form-control.mb-2.input-transform-lowercase(required type="text" name="ticker")
+                      label year end (period)
+                      input.form-control.mb-2(required type="number" name="period")
+
+              .col-lg.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    .h5.card-title Income Statement
+                    .h6.card-subtitle.mb-2.text-muted positve value = 12345 | negative value = -12345
+                    .h6.card-subtitle.mb-5.text-muted * marked fields are required
+                    pre.card-text
+                      .form-group
+                        label total_revenue
+                        input.form-control.mb-2(required type="number" name="total_revenue")
+                        label cogs
+                        input.form-control.mb-2(required type="number" name="cogs")
+                        label operating_expenses
+                        input.form-control.mb-2(required type="number" name="operating_expenses")
+                        label depreciation_amortization
+                        input.form-control.mb-2(required type="number" name="depreciation_amortization")
+                        label other_operating_expenses
+                        input.form-control.mb-2(required type="number" name="other_operating_expenses")
+                        label net_interest_finance
+                        input.form-control.mb-2(required type="number" name="net_interest_finance")
+                        label other_non_operating_income_expense
+                        input.form-control.mb-2(required type="number" name="other_non_operating_income_expense")
+                        label taxes
+                        input.form-control.mb-2(required type="number" name="taxes")
+                        label attributable_to_non_controlling_interests
+                        input.form-control.mb-2(required type="number" name="attributable_to_non_controlling_interests")
+                        label attributable_to_equity_holders_of_parent_company
+                        input.form-control.mb-2(required type="number" name="attributable_to_equity_holders_of_parent_company")
+                        label earnings_per_share_basic
+                        input.form-control.mb-2(required type="number" name="earnings_per_share_basic")
+                        label earnings_per_share_diluted
+                        input.form-control.mb-2(required type="number" name="earnings_per_share_diluted")
+
+              .col-lg.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    .h5.card-title Balance Sheet
+                    .h6.card-subtitle.mb-2.text-muted positve value = 12345 | negative value = (12345)
+                    .h6.card-subtitle.mb-5.text-muted * marked fields are required
+                    pre.card-text
+                      .form-group
+                        label non_current_assets
+                        input.form-control.mb-2(required type="number" name="non_current_assets")
+                        label current_assets
+                        input.form-control.mb-2(required type="number" name="current_assets")
+                        label non_current_liabilities
+                        input.form-control.mb-2(required type="number" name="non_current_liabilities")
+                        label current_liabilities
+                        input.form-control.mb-2(required type="number" name="current_liabilities")
+                        label total_equity
+                        input.form-control.mb-2(required type="number" name="total_equity")
+              
+              .col-lg.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    .h5.card-title Cash Flow
+                    .h6.card-subtitle.mb-2.text-muted positve value = 12345 | negative value = (12345)
+                    .h6.card-subtitle.mb-5.text-muted * marked fields are required
+                    pre.card-text
+                      .form-group
+                        label operating_activities
+                        input.form-control.mb-2(required type="number" name="operating_activities")
+                        label net_cash_from_operating_activities
+                        input.form-control.mb-2(required type="number" name="net_cash_from_operating_activities")
+                        label investing_activities
+                        input.form-control.mb-2(required type="number" name="investing_activities")
+                        label net_cash_from_investing_activities
+                        input.form-control.mb-2(required type="number" name="net_cash_from_investing_activities")
+                        label financing_activities
+                        input.form-control.mb-2(required type="number" name="financing_activities")
+                        label net_cash_from_financing_activities
+                        input.form-control.mb-2(required type="number" name="net_cash_from_financing_activities")
+                        label cash_and_cash_equivalents_at_start_of_year
+                        input.form-control.mb-2(required type="number" name="cash_and_cash_equivalents_at_start_of_year")
+                        label increase_decrease_in_cash_and_cash_equivalents
+                        input.form-control.mb-2(required type="number" name="increase_decrease_in_cash_and_cash_equivalents")
+                        label cash_and_cash_equivalents_at_end_of_year
+                        input.form-control.mb-2(required type="number" name="cash_and_cash_equivalents_at_end_of_year")
+            button.btn.btn-dark(type="submit") submit to db
+        
+        //- company overview section
+        .container-fluid.company-overview(hidden=true)
+          pre(wrap) use the form to input company overview details
+          form(method="post" action="/data/post?function=company_overview&token=admin")
+            .row
+              .col-lg-4.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    pre.card-text
+                      label company_name
+                      input.form-control.mb-2.input-transform-lowercase(type="text" name="company_name")
+                      label ticker
+                      input.form-control.mb-2.input-transform-lowercase(type="text" name="ticker")
+
+              .col-lg.mb-5
+                .card.w-100.shadow-sm.overflow-auto.p-2
+                  .card-body
+                    .h5.card-title General Overview
+                    .h6.card-subtitle.mb-2.text-muted use , (commas) to separate distinct entries
+                    .h6.card-subtitle.mb-5.text-muted * marked fields are required
+                    pre.card-text
+                      .form-group
+                        label *What does the company do
+                        textarea.form-control.mb-2(name="What_does_the_company_do" rows="5" placeholder="please enter a brief description of what the company does indicate paragraphs with '|'")
+
+                        label *What sector is the company in
+                        textarea.form-control.mb-2(name="What_sector_is_the_company_in" rows="5" placeholder="please enter the company classification according to GICS eg sector, industry group NB only this 2 is needed and must be comma separated")
+
+                        label *What region does the company sell in
+                        textarea.form-control.mb-2(name="What_region_does_the_company_sell_in" rows="5" placeholder="please enter the regions the company operates in separate each with '|'")
+
+                        label *How does the company make money
+                        textarea.form-control.mb-2(name="How_does_the_company_make_money" rows="5" placeholder="please state how the company makes money if multiple ways '|' separate each")
+
+                        label *Who are the companies competitors
+                        textarea.form-control.mb-2(name="Who_are_the_companies_competitors" rows="5" placeholder="competitors must be '|' separated")
+
+                        label *Who are the companies leaders
+                        textarea.form-control.mb-2(name="Who_are_the_companies_leaders" rows="5" placeholder="leaders must be '|' separated with a ':' between name and title eg John Doe : CEO | Betty Doe - CFO")
+
+                        label *Who are the companies major shareholders
+                        textarea.form-control.mb-2(name="Who_are_the_companies_major_shareholders" rows="5" placeholder="major shareholders must be '|' separated")
+            button.btn.btn-dark(type="submit") submit to db
