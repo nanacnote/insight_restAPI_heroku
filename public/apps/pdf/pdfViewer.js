@@ -1,5 +1,17 @@
 var pdfjsLib = require('../pdf/pdf');
-var runner = require('./pdfHelper');
+var $ = require("jquery");
+
+// Parse selection into a formatted string
+function runner (string, start=null, end=null) {
+    newstring = string.replace(/  /g,"");
+    try {
+        let results = newstring.match( new RegExp(`${start}(.*?(?=${end}.*))`, "im") )[0];
+        $(".pdf-display-selection").text(`${results}`);
+        $(".pdf-input-selection").val(`${results}`);
+    } catch (error) {
+        console.log("error")
+    }
+}
 
 exports.app = function (path, num, zoom, start=null, end=null) {
     //show progress retrieving
@@ -32,7 +44,7 @@ exports.app = function (path, num, zoom, start=null, end=null) {
                         return store
                     })
                     .then((store)=>{
-                        runner.serializer(store, start, end);
+                        runner(store, start, end);
                     });
                     var scale = zoom;
                     var viewport = page.getViewport({scale: scale});

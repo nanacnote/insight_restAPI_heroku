@@ -10,41 +10,38 @@ block content
         .h5 Analytics Management
 
       .container-fluid.p-5.mb-5.bg-light
-        .h5 CMS Management
+        .h5 Team Management
         .container-fluid
-          button.m-2.btn.btn-outline-info.btn-lg.cms-home Home
-          button.m-2.btn.btn-outline-info.btn-lg.cms-data Data
-          button.m-2.btn.btn-outline-info.btn-lg.cms-dashboard Dashboard
-          button.m-2.btn.btn-outline-info.btn-lg.cms-publications Publications
-          button.m-2.btn.btn-outline-info.btn-lg.cms-about About
+          button.m-2.btn.btn-outline-info.btn-lg.team-kanban-handler Kanban
+          button.m-2.btn.btn-outline-info.btn-lg.team-calender-handler Calender
         hr.mb-5
-        .container-fluid(hidden=true)
-          pre(wrap) use the form below to submit content to be published on the client
-          form
-            .row
-              .col-md
-                .form-group
-                  label.m-2 section of site to be updated
-                  select.form-control.m-2
-                    option Home
-                    option Data
-                    option Publication
-                    option About Us
-                  label.m-2 specific element to be updated
-                  select.form-control.m-2
-                    option logo
-                    option banner
-                    option overview card capition
-                    option home background image
-                  label.m-2 schedule time
-                  input.form-control.m-2
-              .col-md
-                .form-group
-                  label.m-2 input text here markdown supported
-                  textarea.form-control.m-2(rows="5")
-                  label.m-2 input file paths to elements
-                  input.form-control.m-2
-            button.btn.btn-dark.m-2 submit to site
+        .container-fluid.team-kanban(hidden= true)
+          pre(wrap) use the kanban board to create update and close task in the form of tickets
+          div.overflow-auto
+            - var stages= ["Checklist", "To Do", "In Progress", "Done"]
+            .d-inline-flex#kanban-board
+              each val, index in stages
+                div
+                  .h4.mb-3.pl-2= `${index + 1}. ${val}`
+                  div.p-3.mr-5.bg-white.rounded.border-0.kanban-items(style="width: 450px; height: 650px")
+                    div.overflow-auto(style="height: 100%")
+                      div.pb-3.kanban-items
+                        button.ml-2.mb-1.close.kanban-add.kanban-items(type="button" aria-label="Add")
+                          span(aria-hidden="true") &plus;
+                      hr(style="border-top: solid 2px grey")
+                      div.w-100.kanban-items(hidden= true)
+                        form.p-3.kanban-items
+                          textarea.form-control(rows="4" placeholder="enter text here" style="border: solid 3px grey")
+                          .d-flex.justify-content-end
+                            div.my-3
+                              button.btn.btn-danger.btn-sm.mr-3.kanban-dismiss.kanban-items(type="button" stage= val) dismiss
+                              button.btn.btn-primary.btn-sm.kanban-post.kanban-items(type="button" stage= val) post
+                      div.p-3.overflow-auto.kanban-items(style="height: 90%")
+                        div.kanban-stage(class= val.replace(" ", "_"))
+
+        .container-fluid.team-calender(hidden= true)
+          pre(wrap) use the calender to update the entire team on deadlines, events and schedules
+          
 
       .container-fluid.p-5.bg-light
         .h5 Database Management
@@ -171,6 +168,9 @@ block content
                           option(value="-") --
                           option(value="lse_ftse_100_links") LSE contituent links
                         label.m-2 enter the location of the resource
+                        div.m-2.text-warning
+                         | paste this for fste 100 &#x1F680;
+                         | https://www.londonstockexchange.com/indices/ftse-100/constituents/table
                         input.form-control.m-2.scraper-input.scraper-input-default(type="text" name="resource_location" placeholder="location of resource")
                         input.form-control.m-2.scraper-input(type="text" name="resource_location" placeholder="location of resource")
                         input.form-control.m-2.scraper-input(type="text" name="resource_location" placeholder="location of resource")
@@ -197,6 +197,9 @@ block content
                 .container-fluid
                   form.pdf-scraper-form(action="")
                     label.p-2 path to .PDF file
+                    div.m-2.text-warning
+                         | paste this for example &#x1F680;
+                         | http://www.annualreports.co.uk/HostedData/AnnualReportArchive/t/LSE_TSCO_2018.pdf
                     .input-group
                       input.form-control.m-2.pdf-scraper-input(type="text" name="path" placeholder="http://website.com/data/file.pdf")
                       .input-group-append
