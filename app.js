@@ -9,6 +9,7 @@ var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dataRouter = require('./routes/dataAPI');
+var viewsRouter = require('./routes/viewsAPI');
 
 // Initiate express app
 var app = express();
@@ -19,6 +20,7 @@ app.use(cors())
 // Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://admin:xyghyT-bygdow-xyqvo8@ds055802.mlab.com:55802/heroku_htz4tvh3';
+// var mongoDB = 'mongodb://127.0.0.1:27017/';
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -39,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/data', dataRouter);
+app.use('/views', viewsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
