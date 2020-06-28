@@ -13,8 +13,8 @@ exports.post = function(req, res) {
                 // create schema prototype for db entry
                 let doc = await new FinancialReport({
                     period: req.body.period,
-                    company_name: req.body.company_name,
-                    ticker: req.body.ticker,
+                    company_name: req.body.company_name?.toUpperCase(),
+                    ticker: req.body.ticker?.toUpperCase(),
                     income_statement:{
                         total_revenue: req.body.total_revenue,
                         cogs: req.body.cogs,
@@ -74,8 +74,8 @@ exports.post = function(req, res) {
             let entry_2 = async () => {
                 // create schema prototype for company overview entry
                 let doc = await new CompanyOverview({
-                    company_name: req.body.company_name,
-                    ticker: req.body.ticker,
+                    company_name: req.body.company_name?.toUpperCase(),
+                    ticker: req.body.ticker?.toUpperCase(),
                     What_does_the_company_do: req.body.What_does_the_company_do,
                     What_sector_is_the_company_in: req.body.What_sector_is_the_company_in,
                     What_region_does_the_company_sell_in: req.body.What_region_does_the_company_sell_in,
