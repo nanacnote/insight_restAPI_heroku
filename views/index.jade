@@ -28,7 +28,7 @@ block content
                       div.pb-3.kanban-items
                         button.ml-2.mb-1.close.kanban-add.kanban-items(type="button" aria-label="Add")
                           span(aria-hidden="true") &plus;
-                      hr(style="border-top: solid 2px grey")
+                      hr(style="border-top: solid 1px grey")
                       div.w-100.kanban-items(hidden= true)
                         form.p-3.kanban-items
                           textarea.form-control(rows="4" placeholder="enter text here" style="border: solid 3px grey")
@@ -286,29 +286,29 @@ block content
                     pre.card-text
                       .form-group
                         label total_revenue
-                        input.form-control.mb-2(required type="number" name="total_revenue")
+                        input.form-control.mb-2(required type="number" step=".01" name="total_revenue")
                         label cogs
-                        input.form-control.mb-2(required type="number" name="cogs")
+                        input.form-control.mb-2(required type="number" step=".01" name="cogs")
                         label operating_expenses
-                        input.form-control.mb-2(required type="number" name="operating_expenses")
+                        input.form-control.mb-2(required type="number" step=".01" name="operating_expenses")
                         label depreciation_amortization
-                        input.form-control.mb-2(required type="number" name="depreciation_amortization")
+                        input.form-control.mb-2(required type="number" step=".01" name="depreciation_amortization")
                         label other_operating_expenses
-                        input.form-control.mb-2(required type="number" name="other_operating_expenses")
+                        input.form-control.mb-2(required type="number" step=".01" name="other_operating_expenses")
                         label net_interest_finance
-                        input.form-control.mb-2(required type="number" name="net_interest_finance")
+                        input.form-control.mb-2(required type="number" step=".01" name="net_interest_finance")
                         label other_non_operating_income_expense
-                        input.form-control.mb-2(required type="number" name="other_non_operating_income_expense")
+                        input.form-control.mb-2(required type="number" step=".01" name="other_non_operating_income_expense")
                         label taxes
-                        input.form-control.mb-2(required type="number" name="taxes")
+                        input.form-control.mb-2(required type="number" step=".01" name="taxes")
                         label attributable_to_non_controlling_interests
-                        input.form-control.mb-2(required type="number" name="attributable_to_non_controlling_interests")
+                        input.form-control.mb-2(required type="number" step=".01" name="attributable_to_non_controlling_interests")
                         label attributable_to_equity_holders_of_parent_company
-                        input.form-control.mb-2(required type="number" name="attributable_to_equity_holders_of_parent_company")
+                        input.form-control.mb-2(required type="number" step=".01" name="attributable_to_equity_holders_of_parent_company")
                         label earnings_per_share_basic
-                        input.form-control.mb-2(required type="number" name="earnings_per_share_basic")
+                        input.form-control.mb-2(required type="number" step=".01" name="earnings_per_share_basic")
                         label earnings_per_share_diluted
-                        input.form-control.mb-2(required type="number" name="earnings_per_share_diluted")
+                        input.form-control.mb-2(required type="number" step=".01" name="earnings_per_share_diluted")
 
               .col-lg.mb-5
                 .card.w-100.shadow-sm.overflow-auto.p-2
@@ -319,15 +319,15 @@ block content
                     pre.card-text
                       .form-group
                         label non_current_assets
-                        input.form-control.mb-2(required type="number" name="non_current_assets")
+                        input.form-control.mb-2(required type="number" step=".01" name="non_current_assets")
                         label current_assets
-                        input.form-control.mb-2(required type="number" name="current_assets")
+                        input.form-control.mb-2(required type="number" step=".01" name="current_assets")
                         label non_current_liabilities
-                        input.form-control.mb-2(required type="number" name="non_current_liabilities")
+                        input.form-control.mb-2(required type="number" step=".01" name="non_current_liabilities")
                         label current_liabilities
-                        input.form-control.mb-2(required type="number" name="current_liabilities")
+                        input.form-control.mb-2(required type="number" step=".01" name="current_liabilities")
                         label total_equity
-                        input.form-control.mb-2(required type="number" name="total_equity")
+                        input.form-control.mb-2(required type="number" step=".01" name="total_equity")
               
               .col-lg.mb-5
                 .card.w-100.shadow-sm.overflow-auto.p-2
@@ -338,23 +338,23 @@ block content
                     pre.card-text
                       .form-group
                         label operating_activities
-                        input.form-control.mb-2(required type="number" name="operating_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="operating_activities")
                         label net_cash_from_operating_activities
-                        input.form-control.mb-2(required type="number" name="net_cash_from_operating_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="net_cash_from_operating_activities")
                         label investing_activities
-                        input.form-control.mb-2(required type="number" name="investing_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="investing_activities")
                         label net_cash_from_investing_activities
-                        input.form-control.mb-2(required type="number" name="net_cash_from_investing_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="net_cash_from_investing_activities")
                         label financing_activities
-                        input.form-control.mb-2(required type="number" name="financing_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="financing_activities")
                         label net_cash_from_financing_activities
-                        input.form-control.mb-2(required type="number" name="net_cash_from_financing_activities")
+                        input.form-control.mb-2(required type="number" step=".01" name="net_cash_from_financing_activities")
                         label cash_and_cash_equivalents_at_start_of_year
-                        input.form-control.mb-2(required type="number" name="cash_and_cash_equivalents_at_start_of_year")
+                        input.form-control.mb-2(required type="number" step=".01" name="cash_and_cash_equivalents_at_start_of_year")
                         label increase_decrease_in_cash_and_cash_equivalents
-                        input.form-control.mb-2(required type="number" name="increase_decrease_in_cash_and_cash_equivalents")
+                        input.form-control.mb-2(required type="number" step=".01" name="increase_decrease_in_cash_and_cash_equivalents")
                         label cash_and_cash_equivalents_at_end_of_year
-                        input.form-control.mb-2(required type="number" name="cash_and_cash_equivalents_at_end_of_year")
+                        input.form-control.mb-2(required type="number" step=".01" name="cash_and_cash_equivalents_at_end_of_year")
             button.btn.btn-dark(type="submit") submit to db
         
         //- company overview section
@@ -383,7 +383,7 @@ block content
                         textarea.form-control.mb-2(name="What_does_the_company_do" rows="5" placeholder="please enter a brief description of what the company does indicate paragraphs with '|'")
 
                         label *What sector is the company in
-                        textarea.form-control.mb-2(name="What_sector_is_the_company_in" rows="5" placeholder="please enter the company classification according to GICS eg sector, industry group NB only this 2 is needed and must be comma separated")
+                        textarea.form-control.mb-2(name="What_sector_is_the_company_in" rows="5" placeholder="please enter the company classification according to GICS eg sector, industry group NB only this 2 is needed and separate each with '|'")
 
                         label *What region does the company sell in
                         textarea.form-control.mb-2(name="What_region_does_the_company_sell_in" rows="5" placeholder="please enter the regions the company operates in separate each with '|'")

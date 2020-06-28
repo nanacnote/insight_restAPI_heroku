@@ -43632,6 +43632,19 @@ function getUser() {
   return "nana";
 }
 
+// custom function calls from kanban cards
+$(document).on('click','.inApp',function(event){
+  if($(this).attr("call") === "alert"){
+    alert("hurray! this event was created and triggered in App")
+  }
+  if($(this).attr("call") === "more"){
+    $(this).fadeOut("slow").next().attr("hidden", false).children().last().fadeIn("slow")
+  }
+  if($(this).attr("call") === "less"){
+    $(this).fadeOut("slow").parent().attr("hidden", true).prev().fadeIn("slow")
+  }
+})
+
 // function for current date
 function currentDate() {
   var today = new Date();
@@ -43648,7 +43661,7 @@ function screenAlert(params) {
   $("body").after(
     `
               <div class="w-100 screen-alert fixed-bottom">
-              <div class="m-5 card bg-warning">
+              <div class="m-5 card alert-warning">
               <div class="card-body">
               <div class="card-text text-center">
               <pre style="font-size: 1.5rem">${params}</pre>
@@ -43666,51 +43679,101 @@ function screenAlert(params) {
 }
 
 // --------------TEAM SECTION-------------
-// load cards on document ready
-$( document ).ready(function () {
-  // get card data from db 
+// function that returns a kanban card
+function kanbanCard(params_1, params_2, params_3, params_4, params_5) {
+  //params_1 = content
+  //params_2 = date
+  //params_3 = user name
+  //params_4 = id
+  //params_5 = edited
+  return `<div class="card kanban-card shadow mb-4 w-100 rounded">
+            <div class="card-header alert-info">
+            <button type="button" aria-label="Close" class="ml-3 mb-1 close kanban-card-close" identity=${params_4}>
+              <i class="far fa-times-circle"></i>
+            </button>
+            <button type="button" aria-label="Edit" class="ml-2 mb-1 close kanban-card-edit" identity=${params_4}>
+              <i class="far fa-edit"></i>
+            </button>
+            <button type="button" aria-label="Edit" class="ml-2 mb-1 close">
+              <i class="far fa-hand-point-right"></i>
+            </button>
+            <button type="button" aria-label="Edit" class="ml-2 mb-1 close">
+              <i class="far fa-hand-point-left"></i>
+            </button>
+            </div>
+            <div class="card-body bg-light">
+            <div class="kanban-card-editable-text text-dark" style="overflow-wrap: break-word;">${params_1}</div>
+            </div>
+            <div class="card-footer bg-light">
+            <div class="d-flex justify-content-between">
+            <pre class="text-secondary"><strong>Posted &nbsp;</strong>${params_2.match(/[^T]*/g)[0]}<br/><strong>Status &nbsp;</strong>${params_5}</pre>
+            <pre class="text-secondary"><strong>By &nbsp;</strong>${params_3}</pre>
+            </div>
+            </div>
+        </div>`;
+}
+
+// function that gets all kanbanCards from db
+function getAllKanbanCards() {
+  // get card data from db
   $.ajax({
     url: "/views?action=getKanbanCards",
     type: "GET",
     data: {},
     success: function (result) {
-      let checklist = []
-      let toDo = []
-      let inProgress = []
-      let done = []
+      let checklist = [];
+      let toDo = [];
+      let inProgress = [];
+      let done = [];
 
-      result.map(e=> {
-        let values = Object.values(e)
-        values.includes("Checklist")? checklist.push(values) :
-        values.includes("To Do")? toDo.push(values) :
-        values.includes("In Progress")? inProgress.push(values) :
-        values.includes("Done")? done.push(values):
-        null
-      })
-      checklist.map(e => 
-        $(".Checklist").after(kanbanCard( e[4], e[1], e[5] ))
-      )
-      toDo.map(e => 
-        $(".To_Do").after(kanbanCard( e[4], e[1], e[5] ))
-      )
-      inProgress.map(e => 
-        $(".In_Progress").after(kanbanCard( e[4], e[1], e[5] ))
-      )
-      done.map(e => 
-        $(".Done").after(kanbanCard( e[4], e[1], e[5] ))
-      )
-        // click event listner for cards
-      $(".kanban-card-close").click(function (event) {
-        $(this).parent().parent().remove()
-        console.log(event)
-      })
-
-      console.log(result)
+      result.map((e) => {
+        let values = Object.values(e);
+        values.includes("Checklist")
+          ? checklist.push(values)
+          : values.includes("To Do")
+          ? toDo.push(values)
+          : values.includes("In Progress")
+          ? inProgress.push(values)
+          : values.includes("Done")
+          ? done.push(values)
+          : null;
+      });
+      // argument order to pass to kanbanCard function
+      // console.log(toDo)
+      //params_1 = content
+      //params_2 = date
+      //params_3 = user name
+      //params_4 = id
+      //params_5 = edited
+      checklist.map((e) => $(".Checklist").after(kanbanCard( e[5], e[2], e[6], e[1], e[0] )));
+      toDo.map((e) => $(".To_Do").after(kanbanCard( e[5], e[2], e[6], e[1], e[0] )));
+      inProgress.map((e) =>
+        $(".In_Progress").after(kanbanCard( e[5], e[2], e[6], e[1], e[0] ))
+      );
+      done.map((e) => $(".Done").after(kanbanCard( e[5], e[2], e[6], e[1], e[0] )));
     },
   });
-})
+}
 
-// Menu controls
+// function that gets one kanban card from db at the callers this namespace
+async function getThisKanbanCard(params) {
+  let content
+  await $.ajax({
+    url: `/views?action=getKanbanCards&id=${params}`,
+    type: "GET",
+    data: {},
+    success: function (result) {
+      content = result
+    },
+  })
+  return content
+}
+
+
+// load cards on document ready
+$(document).ready(getAllKanbanCards());
+
+// Team management menu controls
 $(".team-kanban-handler, .team-calender-handler").click(function (event) {
   // event.preventDefault();
   $(".team-kanban, .team-calender").css("opacity", 0.1);
@@ -43735,44 +43798,12 @@ $(".team-kanban-handler, .team-calender-handler").click(function (event) {
   }
 });
 
-// function that returns a kanban card
-function kanbanCard(params_1, params_2, params_3) {
-  return `<div class="card kanban-card shadow mb-4 w-100 rounded">
-            <div class="card-header alert-primary">
-            <button type="button" aria-label="Close" class="ml-3 mb-1 close kanban-card-close">
-                <span aria-hidden="true">&#10060;</span>
-            </button>
-            <button type="button" aria-label="Edit" class="ml-2 mb-1 close">
-                <span aria-hidden="true">&#9997;</span>
-            </button>
-            <button type="button" aria-label="Edit" class="ml-2 mb-1 close">
-                <span aria-hidden="true">&#10145;</span>
-            </button>
-            <button type="button" aria-label="Edit" class="ml-2 mb-1 close">
-                <span aria-hidden="true">&#11013;</span>
-            </button>
-            </div>
-            <div class="card-body bg-light">
-            <pre>
-            <p>${params_1}</p>
-            </pre>
-            </div>
-            <div class="card-footer bg-light">
-            <div class="d-flex justify-content-between">
-            <p><strong>Posted &nbsp;</strong>${params_2.match(/[^T]*/g)[0]}</p>
-            <p><strong>By &nbsp;</strong>${params_3}</p>
-            </div>
-            </div>
-        </div>`;
-}
-
 // kanban add
 $(".kanban-add").click(function () {
   let that = this;
   $(".kanban-items").map(function (i, e) {
     if (e === that) {
       $($(".kanban-items").get(i + 1)).attr("hidden", false);
-      // $($(".kanban-items").get(i+5)).attr("style", "height: 60%")
     }
   });
 });
@@ -43782,7 +43813,8 @@ $(".kanban-dismiss").click(function () {
   $(".kanban-items").map(function (i, e) {
     if (e === that) {
       $($(".kanban-items").get(i - 2)).attr("hidden", true);
-      // $($(".kanban-items").get(i+2)).attr("style", "height: 90%")
+      //clear input field
+      $($(".kanban-items").get(i - 1)).children().first().val("")
     }
   });
 });
@@ -43795,10 +43827,9 @@ $(".kanban-post").click(function () {
         .children()
         .first()
         .val();
-      $($(".kanban-items").get(i + 1))
-        .children()
-        .first()
-        .after(kanbanCard( text, currentDate(), getUser() ));
+      $($(".kanban-items").get(i - 2)).children().first().val("")
+      //hide form
+      $($(".kanban-items").get(i - 3)).attr("hidden", true)
 
       // send the cards data to db
       $.ajax({
@@ -43815,12 +43846,77 @@ $(".kanban-post").click(function () {
         },
         success: function (result) {
           screenAlert(result);
+          //clear the stages and fetch cards again
+          $(".kanban-card").each(function (event) {
+            $(this).remove()
+          })
+          getAllKanbanCards()
         },
       });
     }
   });
 });
 
+// kanban card delete
+$(document).on('click','.kanban-card-close',function(event){
+  let identity = $(this).attr("identity")
+  $(event.currentTarget).parent()
+  .removeClass("alert-info")
+  .addClass("bg-danger")
+  .html("<pre class='text-white'>marked for deletion</pre>")
+  $.ajax({
+    url: "/views?action=deleteKanbanCards",
+    type: "DELETE",
+    data: {
+      identity: $(event.currentTarget).attr("identity")
+    },
+    success: function (result) {
+      screenAlert(result);
+    },
+  });
+  $.ajax({
+    url: "/views?action=putKanbanCards",
+    type: "PUT",
+    data: {
+      identity: identity,
+      edited: "<span class='bg-danger text-light'>marked for deletion</span>"
+    },
+  });
+})
+
+//kanban card edit
+$(document).on('click','.kanban-card-edit',async function (event) {
+  let identity = $(this).attr("identity")
+  let content = await getThisKanbanCard(identity).then(v => v)
+  $(this).parent()
+  .removeClass("alert-info")
+  .addClass("bg-info")
+  .html("<pre class='text-white'>in edit mode<li>click on text to edit accept HTML code</li><li>click away to save after</li></pre>")
+  .siblings().first()
+  .children().first()
+  .attr("contenteditable", true)
+  .text(content)
+  .focusout(function (e) {
+    let text = $(e.currentTarget).text().trim()
+    $.ajax({
+      url: "/views?action=putKanbanCards",
+      type: "PUT",
+      data: {
+        identity: identity,
+        content: text,
+        edited: "edited"
+      },
+      success: function (result) {
+        screenAlert(result);
+        //clear the stages and fetch cards again
+        $(".kanban-card").each(function (event) {
+          $(this).remove()
+        })
+        getAllKanbanCards()
+      },
+    });
+  })
+})
 
 // --------------DATABASE SECTION
 // Menu controls
