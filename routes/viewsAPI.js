@@ -56,10 +56,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.delete('/', function(req, res, next) {
-    viewsData.deleteOne({_id: req.body.identity }, function (err, doc) {
-        if (err) {res.send(`Sorry! something went wrong saving to mongodb ${err}`)};
-        res.send(req.body.identity + " has been marked for deletion in 24 hours");
-    });
+    // viewsData.deleteOne({_id: req.body.identity }, function (err, doc) {
+    //     if (err) {res.send(`Sorry! something went wrong saving to mongodb ${err}`)};
+    //     res.send(req.body.identity + " has been marked for deletion in 24 hours");
+    // });
 });
 
 router.put('/', async function (req, res, next) {
